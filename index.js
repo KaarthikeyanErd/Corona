@@ -5,7 +5,7 @@ const fetch = require('node-fetch');
 require('dotenv').config();
 database.loadDatabase();
 const app= express();
-
+const port = process.env.PORT ||3000;
 app.use(express.static('Public'));
 app.use(express.json({limit:'1mb'}));
 
