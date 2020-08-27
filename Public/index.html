@@ -1,110 +1,32 @@
 <!DOCTYPE html>
-<html lang="eng">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>The Weather Here</title>
+  </head>
     <body>
         <h1>Building API</h1>
         <p>Hello good to see u...</p>     
                              
         <p>
-            Your lattitude:<span id='latitude'></span>&deg; <br />
-            Your longitude:<span id='longitude'></span>&deg; <br />
-            Your Area(According to ur IP adress):<span id='area'></span><br/>
-            Humidity: <span id='humidity'></span><br />
-            Api key: <span id="api"></span><br/><br />
-            The total Corona case in your country <span id="Country"></span>
+            <b>Your lattitude:</b><span id='latitude'></span>&deg; <br />
+            <b>Your longitude:</b><span id='longitude'></span>&deg; <br />
+            <b>Your Area(According to ur IP adress)</b>:<span id='area'></span><br/>
+            <b>Humidity:</b><span id='humidity'></span><br />
+            <b> Api key:</b> <span id="api"></span><br/><br />
+            <b>The total Corona case in your country <span id="Country"></span>
             is <span id="count"></span> with new cases on yesterday is <span id="new_cases"></span><br />
-            You are from <span id="district"></span>,<span id="state"></span>. There corona active cases in your district are <span id="active cases"></span>
+            You are from <span id="district"></span>,<span id="state"></span>. There corona active cases in your district are
+            <span id="active cases"></span></b>
 
         </p>
 
-        <script>     
-        
-
-        let latitude, longitude;
-            
-
-      if('geolocation' in navigator){
-          
-        console.log("Geolocation available YAY");
-          navigator.geolocation.getCurrentPosition(async position => {
-          const latitude = position.coords.latitude;
-          const longitude =position.coords.longitude;
-          console.log("Lati=",latitude);
-          console.log("Alti=",longitude);  
-          document.getElementById('latitude').textContent=latitude;
-          document.getElementById('longitude').textContent=longitude;
-
-          let key = await fetch("/key");
-          let api_key = await key.json();
-          document.getElementById("api").textContent=api_key;
-
-         console.log("Key=",api_key);
-
-          let url=`http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${api_key}`
-
-          const initial = await fetch(url);
-          const weather = await initial.json();
-          document.getElementById('humidity').textContent=weather.main.humidity;
-          document.getElementById('area').textContent=weather.name;
-          let country_code = weather.sys.country;
-
-          let corona_url=`https://api.thevirustracker.com/free-api?countryTimeline=${country_code}`;
-          let today = new Date();
-          let month = String(today.getMonth()+1);
-          let date =String(today.getDate()-1).padStart(2,'0');
-          let year=String(today.getFullYear());
-          let req_date=(month+"/"+date+"/"+year.substr(-2)).trim();
-          //let req_date="1/30/2020"
-
-          const count = await fetch(corona_url);
-          const corona = await count.json();
-          document.getElementById("count").textContent=corona.timelineitems[0][req_date].total_cases;
-          document.getElementById("Country").textContent=corona.countrytimelinedata[0].info.title;
-          document.getElementById("new_cases").textContent=corona.timelineitems[0][req_date].new_daily_cases;
-
-
-          let url2=`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=8ab01065063848469ed7983e2b8ef7af`
-          const location = await fetch(url2);
-          const districts= await location.json();
-          let district= districts.results[0].components.state_district.split(" ");
-          if (district[0] == "Tiruchchirappalli"){
-              district= "Tiruchirappalli"
-          }
-          let state = districts.results[0].components.state;
-          document.getElementById("district").textContent=district;
-          document.getElementById("state").textContent=state;
-
-
-          state_url= `https://api.covid19india.org/state_district_wise.json`;
-          const inner_location = await fetch(state_url);
-          const dis_corona= await inner_location.json();
-          let active_case = dis_corona[state].districtData[district].active;
-          console.log(active_case);
-          document.getElementById("active cases").textContent=active_case;
-
-
-
-          const data ={latitude, longitude, weather};
-            const options ={
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            };
-        const response = await fetch('/location', options);
-        const json = await response.json();
-        console.log(json);
-
-
-
-        });
-        
-      }
-      else {
-                console.log("Geolocation not available");
-            }
-        </script>
-                
-
+        <script src="/Java_script.js"></script>
     </body>
 </html>
