@@ -9,7 +9,7 @@ const port = process.env.PORT ||3000;
 app.use(express.static('Public'));
 app.use(express.json({limit:'1mb'}));
 
-app.listen(3000, () => {
+app.listen(port, () => {
 
     console.log("Port @ 3000");
 });
